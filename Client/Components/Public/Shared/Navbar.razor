@@ -1,5 +1,39 @@
 ﻿<h3>Navbar</h3>
 
-@code {
+@code 
+{
+    [Inject] public NavigationManager NavigationManager { get; set; }
 
+    private const string HomePageUri = "/";
+    private const string BlogPageUri = "/blog";
+
+    private bool IsPageActive(string uri)
+    {
+        // Skip(3) skips https://domainname/
+        string[] currentUri = NavigationManager.Uri.Split('/').Skip(3).ToArray();
+
+        if(uri == HomePageUri)
+        {
+            if (currentUri.Last().Length == 0)
+            {
+                return true;
+            }
+        }
+        else
+        {
+            string[] uriCheck = uri.Split('/').Skip(1).ToArray();
+            foreach(string uriwhole in currentUri)
+            {
+                foreach(string uripart in uriCheck)
+                {
+                    if(uripart == uriwhole)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
 }
